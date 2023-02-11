@@ -1,5 +1,5 @@
 /** Declaracion de las variables */
-let productos = [];
+const productos = [];
 let articulo = ""
 let tipoDeProducto = "";
 let producto = "";
@@ -7,6 +7,9 @@ let precioDelProducto = 0;
 let bombillasConcatenadas = ""
 let yerbasConcatenadas = ""
 let matesConcatenados = ""
+let bombillas = []
+let yerbas = []
+let mates = []
 let totalBombillas = 0;
 let totalMates = 0;
 let totalYerbas = 0;
@@ -61,7 +64,7 @@ while (true) {
                 break;
 
             case "mate":
-                producto = prompt("Ingrese unos de nuestros mates\n- Mate calabaza\n- Mate madera\n- Mate alapca\n- Mate plata\n- Mate silicona\n- Mate vidrio").toLowerCase();
+                producto = prompt("Ingrese unos de nuestros mates\n- Mate calabaza\n- Mate madera\n- Mate alpaca\n- Mate plata\n- Mate silicona\n- Mate vidrio").toLowerCase();
 
                 switch (producto) {
                     case "mate calabaza":
@@ -70,7 +73,7 @@ while (true) {
                     case "mate madera":
                         precioDelProducto = 452;
                         break;
-                    case "mate alapca":
+                    case "mate alpaca":
                         precioDelProducto = 6194;
                         break;
                     case "mate plata":
@@ -130,31 +133,36 @@ while (true) {
 }
 
 /** Hacer un array por cada producto, para brindar distintos datos */
-const bombillas = productos.filter(articulo => articulo.tipoDeProducto === "bombilla")
-const yerbas = productos.filter(articulo => articulo.tipoDeProducto === "yerba")
-const mates = productos.filter(articulo => articulo.tipoDeProducto === "mate")
+bombillas = productos.filter(articulo => articulo.tipoDeProducto === "bombilla")
+yerbas = productos.filter(articulo => articulo.tipoDeProducto === "yerba")
+mates = productos.filter(articulo => articulo.tipoDeProducto === "mate")
 
-/** Calcular cuanto se paga por tipo de producto (sin iva) */
-for (let index = 0; index < bombillas.length; index++) {
-    totalBombillas += ((bombillas[index]).precioDelProducto)
+/** Funcion para calcular cuanto se paga por tipo de producto (sin iva) */
+
+const calcularCuantoSePagaPorTipoDeProducto = (tipoDeProductoACalcular) => {
+    let totalDelarticulo = 0
+
+    for (let index = 0; index < tipoDeProductoACalcular.length; index++) {
+        totalDelarticulo += (tipoDeProductoACalcular[index]).precioDelProducto
+    }
+
+    return totalDelarticulo
 }
 
-for (let index = 0; index < mates.length; index++) {
-    totalMates += ((mates[index]).precioDelProducto)
-}
+/** Calcular cuanto se paga por tipo de producto (empleando la funcion de arriba) */
 
-for (let index = 0; index < yerbas.length; index++) {
-    totalYerbas += ((yerbas[index]).precioDelProducto)
-}
+totalBombillas =  calcularCuantoSePagaPorTipoDeProducto (bombillas)
+totalMates = calcularCuantoSePagaPorTipoDeProducto (mates)
+totalYerbas = calcularCuantoSePagaPorTipoDeProducto (yerbas)
 
 /** Recorrido array mientras que se suman todos los productos */
-for (let index = 0; index < productos.length; index++) {
-    subtotal += ((productos[index]).precioDelProducto)
+for (const i of productos) {
+    subtotal += (i.precioDelProducto)
 }
 
 /** Recorrido array mientras que se suman todos los productos con el iva*/
-for (let index = 0; index < productos.length; index++) {
-    total += ((productos[index]).precioDelProducto) * 1.21
+for (const i of productos) {
+    total += (i.precioDelProducto) * 1.21
 }
 
 /** Asignarle valor de solamente el iva */
@@ -162,17 +170,19 @@ iva = total - subtotal;
 
 /** Concatenar productos, clasificado por tipo */
 
-for (let index = 0; index < bombillas.length; index++) {
-    bombillasConcatenadas += bombillas[index].producto + " (" + "$ " + bombillas[index].precioDelProducto + ")" + "\n"
+const concatenarProductosYClasificarlosPorTipo = (tipoDeProductoAConcatenar) => {
+    let productoConcatenado = ""
+    
+    for (const i of tipoDeProductoAConcatenar) {
+        productoConcatenado += `${i.producto} ($ ${i.precioDelProducto}) \n`
+    }
+
+    return productoConcatenado
 }
 
-for (let index = 0; index < yerbas.length; index++) {
-    yerbasConcatenadas += yerbas[index].producto + " (" + "$ " + yerbas[index].precioDelProducto + ")" + "\n"
-}
-
-for (let index = 0; index < mates.length; index++) {
-    matesConcatenados += mates[index].producto + " (" + "$ " + mates[index].precioDelProducto + ")" + "\n"
-}
+bombillasConcatenadas = concatenarProductosYClasificarlosPorTipo (bombillas)
+matesConcatenados = concatenarProductosYClasificarlosPorTipo (mates)
+yerbasConcatenadas = concatenarProductosYClasificarlosPorTipo (yerbas)
 
 /** Mensaje final con toda la informacion */
-console.log(`Hola, buenos días. Gracias por hacer tus compras en nuestra página.\n\nUsted a gastado:\n\n$${totalBombillas} en bombillas.\n$${totalMates} en mates.\n$${totalYerbas} en yerbas.\n\nDescripción de su compra:\n\nBombillas:\n\n${bombillasConcatenadas}\nMates:\n\n${matesConcatenados}\nYerbas:\n\n${yerbasConcatenadas}\nEl subtotal sería de: $ ${subtotal}\nEl IVA a pagar seria de: $ ${parseInt(iva)}\nPor ende el total es de $ ${total}\n\nMuchas gracias por confiar en nosotros!`)
+console.log(`Hola, buenos días. Gracias por hacer tus compras en nuestra página.\n\nUsted a gastado:\n\n$${totalBombillas} en bombillas.\n$${totalMates} en mates.\n$${totalYerbas} en yerbas.\n\nDescripción de su compra:\n\nBombillas:\n\n${bombillasConcatenadas}\nMates:\n\n${matesConcatenados}\nYerbas:\n\n${yerbasConcatenadas}\nEl subtotal sería de: $ ${parseInt(subtotal)}\nEl IVA a pagar seria de: $ ${parseInt(iva)}\nPor ende el total es de $ ${parseInt(total)}\n\nMuchas gracias por confiar en nosotros!`)
